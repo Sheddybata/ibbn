@@ -2,6 +2,7 @@
   "name": "ibbnnigeria-site",
   "private": true,
   "scripts": {
+    "build": "node --eval \"void 0\"",
     "dev": "serve . -l 5173",
     "start": "serve . -l 5173"
   },
