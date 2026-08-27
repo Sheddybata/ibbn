@@ -2,11 +2,13 @@
   "name": "ibbnnigeria-site",
   "private": true,
   "scripts": {
-    "build": "node --eval \"void 0\"",
-    "dev": "serve . -l 5173",
+    "build": "node scripts/write_config.mjs",
+    "geo": "node scripts/build_inec_geo.mjs",
+    "dev": "node scripts/write_config.mjs && serve . -l 5173",
     "start": "serve . -l 5173"
   },
   "devDependencies": {
+    "nigerian-states-lgas-and-polling-units": "^1.0.0",
     "serve": "^14.2.4"
   }
 }

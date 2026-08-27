@@ -55,7 +55,8 @@ const html = `<!DOCTYPE html>
           <li><a href="index.html#what-we-do">Programmes</a></li>
           <li><a href="leadership.html">Leadership</a></li>
           <li><a href="press.html" aria-current="page">Press</a></li>
-          <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="register.html" class="nav-cta">Register</a></li>
         </ul>
       </nav>
     </div>
@@ -145,6 +146,7 @@ ${snippet}
             <li><a href="index.html#what-we-do">Programmes</a></li>
             <li><a href="leadership.html">Leadership</a></li>
             <li><a href="press.html">Press</a></li>
+            <li><a href="register.html">Register</a></li>
             <li><a href="index.html#contact">Contact</a></li>
           </ul>
         </div>

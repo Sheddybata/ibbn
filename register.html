@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Register as a member of IBBN — Initiative for Better and Brighter Nigeria. Receive a digital membership card." />
+  <title>Register — IBBN Nigeria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="/public/ibbn.png" type="image/png" sizes="any" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/png" />
+  <link rel="apple-touch-icon" href="/public/ibbn.png" />
+  <link rel="canonical" href="https://ibbnnigeria.org/register.html" />
+  <meta name="theme-color" content="#31794c" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="IBBN Nigeria" />
+  <meta property="og:title" content="Register — IBBN Nigeria" />
+  <meta property="og:description" content="Register as a member of IBBN and receive a digital membership card." />
+  <meta property="og:url" content="https://ibbnnigeria.org/register.html" />
+  <meta property="og:image" content="https://ibbnnigeria.org/public/ibbn.png" />
+  <meta property="og:locale" content="en_NG" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ibbnigeria1" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="IBBN home">
+        <span class="brand-mark">IBBN</span>
+        <span class="brand-sub">Better &amp; Brighter Nigeria</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="sr-only">Menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#what-we-do">Programmes</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="register.html" class="nav-cta" aria-current="page">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <span class="breadcrumb-current">Register</span>
+      </nav>
+    </div>
+
+    <section class="section section-alt section-page-head">
+      <div class="container narrow">
+        <h1 class="page-title">Register with IBBN</h1>
+        <p class="lead">
+          Join your local structure. Choose your state, LGA, ward, and polling unit from INEC lists, then add a passport photo so we can issue your membership card.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container register-wrap">
+        <ol class="reg-steps" aria-label="Registration steps">
+          <li class="is-active" data-step-dot="1">Identity</li>
+          <li data-step-dot="2">Contact</li>
+          <li data-step-dot="3">Location</li>
+          <li data-step-dot="4">Photo &amp; card</li>
+        </ol>
+
+        <form id="register-form" class="reg-form" novalidate>
+          <fieldset class="reg-panel is-active" data-step="1">
+            <legend class="reg-legend">1. Identity</legend>
+            <p class="reg-help">Use the names on your voter’s card.</p>
+            <div class="reg-grid">
+              <label class="field">
+                <span class="field-label">Title</span>
+                <select name="title">
+                  <option value="">Optional</option>
+                  <option>Mr</option>
+                  <option>Mrs</option>
+                  <option>Miss</option>
+                  <option>Ms</option>
+                  <option>Dr</option>
+                  <option>Prof</option>
+                  <option>Chief</option>
+                  <option>Alh</option>
+                  <option>Pst</option>
+                  <option>Rev</option>
+                  <option>Barr</option>
+                  <option>Engr</option>
+                  <option>Hon</option>
+                  <option>Amb</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">First name</span>
+                <input name="first_name" type="text" autocomplete="given-name" required />
+              </label>
+              <label class="field">
+                <span class="field-label">Surname</span>
+                <input name="last_name" type="text" autocomplete="family-name" required />
+              </label>
+              <label class="field">
+                <span class="field-label">Other names</span>
+                <input name="other_names" type="text" autocomplete="additional-name" />
+              </label>
+              <label class="field">
+                <span class="field-label">Gender</span>
+                <select name="gender" required>
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </label>
+              <label class="field field-span">
+                <span class="field-label">Date of birth</span>
+                <div class="dob-row">
+                  <select id="dob-day" required aria-label="Day">
+                    <option value="">Day</option>
+                  </select>
+                  <select id="dob-month" required aria-label="Month">
+                    <option value="">Month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
+                  <select id="dob-year" required aria-label="Year">
+                    <option value="">Year</option>
+                  </select>
+                </div>
+                <input type="hidden" name="date_of_birth" id="dob-value" />
+              </label>
+            </div>
+            <div class="reg-actions">
+              <button type="button" class="btn btn-solid" data-next>Continue</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="reg-panel" data-step="2" hidden>
+            <legend class="reg-legend">2. Contact</legend>
+            <div class="reg-grid">
+              <label class="field">
+                <span class="field-label">Phone</span>
+                <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0803…" required />
+              </label>
+              <label class="field">
+                <span class="field-label">WhatsApp</span>
+                <input name="whatsapp" type="tel" inputmode="tel" placeholder="Same as phone if empty" />
+              </label>
+              <label class="field field-span">
+                <span class="field-label">Email</span>
+                <input name="email" type="email" autocomplete="email" />
+              </label>
+              <label class="field field-span">
+                <span class="field-label">Occupation / status</span>
+                <select name="occupation">
+                  <option value="">Optional</option>
+                  <option>Student</option>
+                  <option>Civil servant</option>
+                  <option>Business / professional</option>
+                  <option>Artisan</option>
+                  <option>Farmer</option>
+                  <option>Self-employed</option>
+                  <option>Unemployed</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+            <div class="reg-actions">
+              <button type="button" class="btn btn-ghost" data-prev>Back</button>
+              <button type="button" class="btn btn-solid" data-next>Continue</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="reg-panel" data-step="3" hidden>
+            <legend class="reg-legend">3. Location &amp; VIN</legend>
+            <p class="reg-help">Lists are from INEC: 37 states (including FCT), 774 LGAs, 8,957 wards, and 202,297 polling units. Pick state, then LGA, then ward, then polling unit.</p>
+            <div class="reg-grid">
+              <label class="field">
+                <span class="field-label">State</span>
+                <select name="state" id="state-select" required>
+                  <option value="">Select state</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">LGA</span>
+                <select name="lga" id="lga-select" required disabled>
+                  <option value="">Select LGA</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">Ward / registration area</span>
+                <select name="ward" id="ward-select" required disabled>
+                  <option value="">Select ward</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">Polling unit</span>
+                <select name="polling_unit" id="pu-select" required disabled>
+                  <option value="">Select polling unit</option>
+                </select>
+              </label>
+              <label class="field field-span">
+                <span class="field-label">VIN / PVC number</span>
+                <input name="vin" type="text" autocomplete="off" placeholder="Number on the voter’s card" required />
+                <span class="field-hint">We do not collect NIN. Only the voter identification number on your PVC.</span>
+              </label>
+            </div>
+            <p class="reg-status" id="geo-status" role="status"></p>
+            <div class="reg-actions">
+              <button type="button" class="btn btn-ghost" data-prev>Back</button>
+              <button type="button" class="btn btn-solid" data-next>Continue</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="reg-panel" data-step="4" hidden>
+            <legend class="reg-legend">4. Photo &amp; membership card</legend>
+            <p class="reg-help">Add a passport photograph last. It is printed on the card. Upload a file or take a photo with the front or back camera.</p>
+            <div class="field field-span">
+              <span class="field-label">Passport photograph</span>
+              <input id="photo-input" name="photo" type="file" accept="image/*" hidden />
+              <div class="photo-actions">
+                <button type="button" class="btn btn-ghost" id="photo-upload-btn">Upload photo</button>
+                <button type="button" class="btn btn-solid" id="photo-camera-btn">Take photo</button>
+              </div>
+              <span class="field-hint">Clear head-and-shoulders photo. JPEG or PNG, under 8 MB.</span>
+              <img id="photo-preview" class="reg-preview" alt="" hidden />
+            </div>
+            <dl class="reg-review" id="review-list"></dl>
+            <label class="field field-check">
+              <input name="consent" type="checkbox" required />
+              <span>I confirm this information is mine, I am 18 or older, and I consent to IBBN storing it to issue a membership card.</span>
+            </label>
+            <p class="reg-status" id="form-status" role="status"></p>
+            <div class="reg-actions">
+              <button type="button" class="btn btn-ghost" data-prev>Back</button>
+              <button type="submit" class="btn btn-solid" id="submit-btn">Complete registration</button>
+            </div>
+          </fieldset>
+        </form>
+
+        <div id="card-result" class="reg-card-result" hidden>
+          <h2 class="section-title">Your IBBN membership card</h2>
+          <p class="reg-help" id="save-note">Save or print this card. Keep your membership ID.</p>
+          <div class="id-card-frame">
+            <canvas id="id-card" width="860" height="540" aria-label="IBBN membership card"></canvas>
+          </div>
+          <p class="reg-actions">
+            <button type="button" class="btn btn-solid" id="download-card">Download card (PNG)</button>
+            <button type="button" class="btn btn-ghost" id="print-card">Print</button>
+            <a class="btn btn-ghost" href="index.html">Return home</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <img class="footer-brand-logo" src="public/ibbn.png" alt="IBBN — Initiative for Better and Brighter Nigeria" width="180" height="54" decoding="async" />
+          <p class="footer-tag">Initiative for Better and Brighter Nigeria</p>
+        </div>
+        <div>
+          <p class="footer-heading">Explore</p>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="register.html">Register</a></li>
+            <li><a href="press.html">Press</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading">Site</p>
+          <p class="footer-domain">ibbnnigeria.org</p>
+          <p class="footer-copy">&copy; <span id="year"></span> IBBN. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="camera-modal" class="camera-modal" hidden>
+    <div class="camera-sheet" role="dialog" aria-labelledby="camera-title" aria-modal="true">
+      <h2 id="camera-title" class="camera-title">Take passport photo</h2>
+      <p class="field-hint" id="camera-status"></p>
+      <div class="camera-stage">
+        <video id="camera-video" autoplay playsinline muted></video>
+      </div>
+      <div class="camera-actions">
+        <button type="button" class="btn btn-ghost" id="camera-facing-btn">Use back camera</button>
+        <button type="button" class="btn btn-solid" id="camera-capture-btn">Capture</button>
+        <button type="button" class="btn btn-ghost" id="camera-close-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>window.IBBN_CONFIG = window.IBBN_CONFIG || { supabaseUrl: "", supabaseAnonKey: "" };</script>
+  <script src="config.js"></script>
+  <script src="main.js"></script>
+  <script src="register.js"></script>
+</body>
+</html>
