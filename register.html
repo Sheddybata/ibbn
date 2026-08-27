@@ -232,18 +232,18 @@
             </div>
           </fieldset>
 
-          <fieldset class="reg-panel" data-step="4" hidden>
-            <legend class="reg-legend">4. Photo &amp; membership card</legend>
-            <p class="reg-help">Add a passport photograph last. It is printed on the card. Upload a file or take a photo with the front or back camera.</p>
-            <div class="field field-span">
+          <fieldset class="reg-panel reg-panel-photo" data-step="4" hidden>
+            <legend class="reg-legend">4. Photo &amp; card</legend>
+            <p class="reg-help">Upload a file or take a photo. It is printed on your membership card.</p>
+            <div class="field photo-block">
               <span class="field-label">Passport photograph</span>
               <input id="photo-input" name="photo" type="file" accept="image/*" hidden />
               <div class="photo-actions">
                 <button type="button" class="btn btn-ghost" id="photo-upload-btn">Upload photo</button>
                 <button type="button" class="btn btn-solid" id="photo-camera-btn">Take photo</button>
               </div>
-              <span class="field-hint">Clear head-and-shoulders photo. JPEG or PNG, under 8 MB.</span>
-              <img id="photo-preview" class="reg-preview" alt="" hidden />
+              <span class="field-hint">Head and shoulders. JPEG or PNG.</span>
+              <img id="photo-preview" class="reg-preview" alt="Passport photo preview" hidden />
             </div>
             <dl class="reg-review" id="review-list"></dl>
             <label class="field field-check">

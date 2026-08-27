@@ -913,7 +913,15 @@ img {
   margin-top: 0.3rem;
   width: 18px;
   height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  flex-shrink: 0;
   accent-color: var(--brand);
+}
+
+.reg-form .field-check span {
+  flex: 1;
+  min-width: 0;
 }
 
 /* WhatsApp / contact (home) */
@@ -1587,7 +1595,8 @@ img {
   }
 
   .reg-form {
-    padding: 1rem 0.9rem 1.25rem;
+    padding: 1rem 0.85rem 1.35rem;
+    overflow-x: hidden;
   }
 
   .reg-steps {
@@ -1609,13 +1618,56 @@ img {
     grid-template-columns: 1fr;
   }
 
-  .reg-form .field.field-check {
-    align-items: flex-start;
+  .reg-panel-photo .reg-legend {
+    font-size: 1.15rem;
+  }
+
+  .reg-panel-photo .reg-help {
+    font-size: 0.9rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .photo-block {
+    padding: 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(49, 121, 76, 0.04);
+  }
+
+  .reg-preview {
+    width: min(180px, 56vw);
+    height: auto;
+    aspect-ratio: 4 / 5;
+    margin: 0.85rem auto 0;
+  }
+
+  .reg-review {
+    margin-top: 1rem;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(49, 121, 76, 0.04);
+    gap: 0.75rem;
   }
 
   .reg-review > div {
     grid-template-columns: 1fr;
-    gap: 0.15rem;
+    gap: 0.2rem;
+  }
+
+  .reg-review dd {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 0.95rem;
+  }
+
+  .reg-form .field.field-check {
+    align-items: flex-start;
+    margin-top: 0.85rem;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.88rem;
   }
 
   .reg-actions,
@@ -1626,21 +1678,46 @@ img {
 
   .reg-actions .btn,
   .photo-actions .btn,
-  .camera-actions .btn {
+  .camera-actions .btn,
+  .reg-card-result .btn {
     width: 100%;
+    box-sizing: border-box;
     text-align: center;
   }
 
+  .camera-modal {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .camera-sheet {
+    width: 100%;
+    max-height: 100dvh;
+    border-radius: 16px 16px 0 0;
+    margin-top: auto;
+    padding: 0.9rem 0.9rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    overflow: auto;
+  }
+
+  .camera-stage {
+    aspect-ratio: unset;
+    height: min(38vh, 280px);
+  }
+
   .id-card-frame {
-    margin-inline: -0.4rem;
+    margin-inline: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #id-card {
     width: 100%;
+    min-width: 0;
+    display: block;
   }
 }
 
-.reg-form .field input,
+.reg-form .field input:not([type="checkbox"]):not([type="file"]),
 .reg-form .field select {
   display: block;
   width: 100%;
