@@ -72,7 +72,9 @@
   var submitBtn = document.getElementById("submit-btn");
   var cardResult = document.getElementById("card-result");
   var canvas = document.getElementById("id-card");
+  var canvasBack = document.getElementById("id-card-back");
   var photoPreview = document.getElementById("photo-preview");
+  var issuedId = "";
 
   fetch("data/inec/states.json")
     .then(function (r) {
@@ -256,15 +258,27 @@
   });
 
   document.getElementById("download-card").addEventListener("click", function () {
-    var link = document.createElement("a");
-    link.download = "IBBN-membership-card.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    if (window.IBBNCard) window.IBBNCard.downloadBoth(canvas, canvasBack, issuedId);
   });
 
   document.getElementById("print-card").addEventListener("click", function () {
+    showCardFace("front");
     window.print();
   });
+
+  document.querySelectorAll("[data-card-face]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      showCardFace(btn.getAttribute("data-card-face"));
+    });
+  });
+
+  function showCardFace(side) {
+    canvas.classList.toggle("is-visible", side === "front");
+    canvasBack.classList.toggle("is-visible", side === "back");
+    document.querySelectorAll("[data-card-face]").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.getAttribute("data-card-face") === side);
+    });
+  }
 
   function currentLga() {
     if (!statePack) return null;
@@ -418,10 +432,21 @@
   function completeRegistration() {
     var v = values();
     var id = membershipId();
+    issuedId = id;
     submitBtn.disabled = true;
     setStatus("Issuing your card…", false);
 
-    drawCard(v, id, portraitUrl)
+    if (!window.IBBNCard) {
+      submitBtn.disabled = false;
+      setStatus("Card module failed to load. Refresh the page.", true);
+      return;
+    }
+
+    var cardMember = Object.assign({}, v, { membership_id: id });
+    window.IBBNCard.drawFront(canvas, cardMember, portraitUrl)
+      .then(function () {
+        return window.IBBNCard.drawBack(canvasBack, id, new Date());
+      })
       .then(function () {
         return saveToSupabase(v, id);
       })
@@ -430,6 +455,7 @@
         cardResult.hidden = false;
         document.getElementById("save-note").textContent = note;
         document.querySelector(".reg-steps").hidden = true;
+        showCardFace("front");
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
       .catch(function (err) {
@@ -481,155 +507,6 @@
         }
         return "Saved. Membership ID " + id + " — download or print your card.";
       });
-  }
-
-  function drawCard(v, id, photoSrc) {
-    var ctx = canvas.getContext("2d");
-    var w = canvas.width;
-    var h = canvas.height;
-    var logo = new Image();
-    var photo = new Image();
-    var barH = 22;
-
-    return Promise.all([loadImg(logo, "public/ibbn.png"), loadImg(photo, photoSrc)]).then(function () {
-      ctx.fillStyle = "#31794c";
-      ctx.fillRect(0, 0, w, h);
-      drawHalftone(ctx, w, h - barH);
-
-      ctx.drawImage(logo, 28, 22, 72, 72);
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "700 15px Fraunces, Georgia, serif";
-      ctx.fillText("INITIATIVE FOR BETTER", 112, 46);
-      ctx.fillText("AND BRIGHTER NIGERIA", 112, 66);
-      ctx.font = "700 22px Fraunces, Georgia, serif";
-      ctx.fillText("IBBN", 112, 92);
-
-      ctx.textAlign = "right";
-      ctx.font = "800 24px Fraunces, Georgia, serif";
-      ctx.fillText("MEMBERSHIP", w - 28, 46);
-      ctx.fillText("IDENTITY CARD", w - 28, 74);
-      ctx.textAlign = "left";
-
-      var photoW = 198;
-      var photoH = 252;
-      var photoX = w - 24 - photoW;
-      var photoY = h - barH - 88 - photoH;
-      drawCover(ctx, photo, photoX, photoY, photoW, photoH);
-      ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(photoX + 0.5, photoY + 0.5, photoW - 1, photoH - 1);
-
-      var colX = 32;
-      var colW = photoX - colX - 16;
-      var half = Math.floor((colW - 18) / 2);
-      var y = 152;
-
-      y = drawField(ctx, "Name", [v.first_name, v.other_names, v.last_name].filter(Boolean).join(" "), colX, y, colW, 22);
-      y = drawField(ctx, "ID No", id, colX, y, colW, 20);
-
-      var rowY = y;
-      var yLeft = drawField(ctx, "State", v.state, colX, rowY, half, 18);
-      var yRight = drawField(ctx, "LGA", v.lga, colX + half + 18, rowY, half, 18);
-      rowY = Math.max(yLeft, yRight);
-
-      yLeft = drawField(ctx, "Ward", v.ward, colX, rowY, half, 18);
-      yRight = drawField(ctx, "Polling unit", v.polling_unit, colX + half + 18, rowY, half, 18);
-      rowY = Math.max(yLeft, yRight);
-
-      drawField(ctx, "VIN", v.vin, colX, rowY, colW, 18);
-
-      var segs = ["#ffffff", "#4d9a66", "#ffffff", "#1e4d30"];
-      var segW = w / segs.length;
-      segs.forEach(function (color, i) {
-        ctx.fillStyle = color;
-        ctx.fillRect(Math.round(i * segW), h - barH, Math.ceil(segW) + 1, barH);
-      });
-    });
-  }
-
-  function drawHalftone(ctx, w, h) {
-    var cx = w - 40;
-    var cy = 36;
-    for (var r = 18; r < 420; r += 16) {
-      var dots = Math.max(10, Math.round(r / 9));
-      for (var i = 0; i < dots; i++) {
-        var t = (i / dots) * Math.PI * 0.55;
-        var x = cx - Math.cos(t) * r;
-        var y = cy + Math.sin(t) * r * 0.72;
-        if (x < 0 || y > h - 8) continue;
-        var fade = 1 - r / 420;
-        var radius = 1.2 + fade * 2.4;
-        ctx.beginPath();
-        ctx.fillStyle = "rgba(0,0,0," + (0.1 + fade * 0.18) + ")";
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  }
-
-  function drawField(ctx, label, value, x, y, maxWidth, valueSize) {
-    valueSize = valueSize || 18;
-    ctx.fillStyle = "rgba(255,255,255,0.82)";
-    ctx.font = "500 12px 'DM Sans', sans-serif";
-    ctx.fillText(label + ":", x, y);
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "700 " + valueSize + "px Fraunces, Georgia, serif";
-    var text = String(value || "—").toUpperCase();
-    var next = wrapText(ctx, text, x, y + valueSize + 4, maxWidth, valueSize + 4);
-    return next + 14;
-  }
-
-  function loadImg(img, src) {
-    return new Promise(function (resolve, reject) {
-      img.onload = function () {
-        resolve(img);
-      };
-      img.onerror = function () {
-        reject(new Error("Could not load image for the card."));
-      };
-      img.src = src;
-    });
-  }
-
-  function drawCover(ctx, img, x, y, w, h) {
-    var ir = img.width / img.height;
-    var cr = w / h;
-    var dw = w;
-    var dh = h;
-    var dx = x;
-    var dy = y;
-    if (ir > cr) {
-      dw = h * ir;
-      dx = x - (dw - w) / 2;
-    } else {
-      dh = w / ir;
-      dy = y - (dh - h) / 2;
-    }
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(x, y, w, h);
-    ctx.clip();
-    ctx.drawImage(img, dx, dy, dw, dh);
-    ctx.restore();
-  }
-
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    var words = String(text).split(" ");
-    var line = "";
-    var yy = y;
-    for (var i = 0; i < words.length; i++) {
-      var test = line + words[i] + " ";
-      if (ctx.measureText(test).width > maxWidth && i > 0) {
-        ctx.fillText(line, x, yy);
-        line = words[i] + " ";
-        yy += lineHeight;
-      } else {
-        line = test;
-      }
-    }
-    ctx.fillText(line, x, yy);
-    return yy + 4;
   }
 
   function compressImage(file, maxEdge, quality) {

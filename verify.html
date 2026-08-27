@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Verify an IBBN membership card by scanning the QR code or entering a membership ID." />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Verify membership — IBBN Nigeria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="/public/ibbn.png" type="image/png" sizes="any" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/png" />
+  <link rel="apple-touch-icon" href="/public/ibbn.png" />
+  <link rel="canonical" href="https://ibbnnigeria.org/verify.html" />
+  <meta name="theme-color" content="#31794c" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="IBBN Nigeria" />
+  <meta property="og:title" content="Verify membership — IBBN Nigeria" />
+  <meta property="og:description" content="Confirm that an IBBN membership card is genuine." />
+  <meta property="og:url" content="https://ibbnnigeria.org/verify.html" />
+  <meta property="og:image" content="https://ibbnnigeria.org/public/ibbn.png" />
+  <meta property="og:locale" content="en_NG" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ibbnigeria1" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="IBBN home">
+        <span class="brand-mark">IBBN</span>
+        <span class="brand-sub">Better &amp; Brighter Nigeria</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="sr-only">Menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#what-we-do">Programmes</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="register.html" class="nav-cta">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <span class="breadcrumb-current">Verify</span>
+      </nav>
+    </div>
+
+    <section class="section section-alt section-page-head">
+      <div class="container narrow">
+        <h1 class="page-title">Verify an IBBN member</h1>
+        <p class="lead">
+          Scan the QR on a membership card, or enter the membership ID. This page confirms the card is on IBBN’s register. It does not show phone, VIN, or other private details.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container register-wrap">
+        <form id="verify-form" class="reg-form" novalidate>
+          <label class="field">
+            <span>Membership ID</span>
+            <input id="verify-id" name="membership_id" type="text" inputmode="text" autocomplete="off" placeholder="IBBN-2026-123456" required />
+          </label>
+          <p class="reg-status" id="verify-status" role="status"></p>
+          <div class="reg-actions">
+            <button type="submit" class="btn btn-solid" id="verify-btn">Verify</button>
+          </div>
+        </form>
+
+        <div id="verify-result" class="verify-card" hidden>
+          <p class="verify-badge" id="verify-badge">Verified member</p>
+          <div class="verify-layout">
+            <img id="verify-photo" class="verify-photo" alt="Member passport photo" />
+            <dl class="reg-review" id="verify-list"></dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <img class="footer-brand-logo" src="public/ibbn.png" alt="IBBN — Initiative for Better and Brighter Nigeria" width="180" height="54" decoding="async" />
+          <p class="footer-tag">Initiative for Better and Brighter Nigeria</p>
+        </div>
+        <div>
+          <p class="footer-heading">Explore</p>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="register.html">Register</a></li>
+            <li><a href="verify.html">Verify a member</a></li>
+            <li><a href="press.html">Press</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading">Site</p>
+          <p class="footer-domain">ibbnnigeria.org</p>
+          <p class="footer-copy">&copy; <span id="year"></span> IBBN. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>window.IBBN_CONFIG = window.IBBN_CONFIG || { supabaseUrl: "", supabaseAnonKey: "" };</script>
+  <script src="config.js"></script>
+  <script src="main.js"></script>
+  <script src="verify.js"></script>
+</body>
+</html>

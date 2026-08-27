@@ -261,12 +261,17 @@
         <div id="card-result" class="reg-card-result" hidden>
           <h2 class="section-title">Your IBBN membership card</h2>
           <p class="reg-help" id="save-note">Save or print this card. Keep your membership ID.</p>
+          <div class="card-toggle" role="tablist" aria-label="Card side">
+            <button type="button" class="btn btn-ghost is-card-tab is-active" id="tab-front" data-card-face="front">Front</button>
+            <button type="button" class="btn btn-ghost is-card-tab" id="tab-back" data-card-face="back">Back</button>
+          </div>
           <div class="id-card-frame">
-            <canvas id="id-card" width="860" height="540" aria-label="IBBN membership card"></canvas>
+            <canvas id="id-card" class="id-card-face is-visible" width="860" height="540" aria-label="IBBN membership card front"></canvas>
+            <canvas id="id-card-back" class="id-card-face" width="860" height="540" aria-label="IBBN membership card back"></canvas>
           </div>
           <p class="reg-actions">
-            <button type="button" class="btn btn-solid" id="download-card">Download card (PNG)</button>
-            <button type="button" class="btn btn-ghost" id="print-card">Print</button>
+            <button type="button" class="btn btn-solid" id="download-card">Download card</button>
+            <button type="button" class="btn btn-ghost" id="print-card">Print both sides</button>
             <a class="btn btn-ghost" href="index.html">Return home</a>
           </p>
         </div>
@@ -286,6 +291,7 @@
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="register.html">Register</a></li>
+            <li><a href="verify.html">Verify a member</a></li>
             <li><a href="press.html">Press</a></li>
             <li><a href="index.html#contact">Contact</a></li>
           </ul>
@@ -317,6 +323,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>window.IBBN_CONFIG = window.IBBN_CONFIG || { supabaseUrl: "", supabaseAnonKey: "" };</script>
   <script src="config.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="id-card.js"></script>
   <script src="main.js"></script>
   <script src="register.js"></script>
 </body>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="IBBN membership admin console." />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — IBBN Nigeria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="/public/ibbn.png" type="image/png" sizes="any" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/png" />
+  <link rel="apple-touch-icon" href="/public/ibbn.png" />
+  <meta name="theme-color" content="#31794c" />
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header admin-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="IBBN home">
+        <span class="brand-mark">IBBN</span>
+        <span class="brand-sub">Admin</span>
+      </a>
+      <div class="admin-header-actions" id="admin-header-actions" hidden>
+        <span class="admin-user" id="admin-user"></span>
+        <button type="button" class="btn btn-ghost btn-sm" id="refresh-btn">Refresh</button>
+        <button type="button" class="btn btn-solid btn-sm" id="sign-out-btn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="admin-login" class="section section-alt">
+      <div class="container narrow">
+        <h1 class="page-title">Admin sign in</h1>
+        <p class="lead">Monitor IBBN registrations. This page is for authorised staff only.</p>
+        <form id="login-form" class="reg-form admin-login-form" novalidate>
+          <label class="field">
+            <span class="field-label">Email</span>
+            <input id="login-email" name="email" type="email" autocomplete="username" required />
+          </label>
+          <label class="field">
+            <span class="field-label">Password</span>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+          </label>
+          <p class="reg-status" id="login-status" role="status"></p>
+          <div class="reg-actions">
+            <button type="submit" class="btn btn-solid" id="login-btn">Sign in</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="admin-app" class="section admin-app" hidden>
+      <div class="container admin-wide">
+        <h1 class="page-title">Membership overview</h1>
+        <p class="admin-updated" id="admin-updated"></p>
+        <p class="reg-status" id="app-status" role="status"></p>
+
+        <div class="admin-stats" id="admin-stats">
+          <article class="admin-stat">
+            <p class="admin-stat-label">All members</p>
+            <p class="admin-stat-value" id="stat-total">0</p>
+          </article>
+          <article class="admin-stat">
+            <p class="admin-stat-label">Today</p>
+            <p class="admin-stat-value" id="stat-today">0</p>
+          </article>
+          <article class="admin-stat">
+            <p class="admin-stat-label">Last 7 days</p>
+            <p class="admin-stat-value" id="stat-week">0</p>
+          </article>
+          <article class="admin-stat">
+            <p class="admin-stat-label">This month</p>
+            <p class="admin-stat-value" id="stat-month">0</p>
+          </article>
+        </div>
+
+        <div class="admin-split">
+          <article class="admin-panel">
+            <h2 class="admin-panel-title">Gender</h2>
+            <ul class="admin-gender" id="stat-gender"></ul>
+          </article>
+          <article class="admin-panel">
+            <h2 class="admin-panel-title">By state</h2>
+            <div class="admin-state-list" id="stat-states"></div>
+          </article>
+        </div>
+
+        <article class="admin-panel">
+          <h2 class="admin-panel-title">Recent registrations</h2>
+          <ul class="admin-recent" id="recent-list"></ul>
+        </article>
+
+        <article class="admin-panel admin-register-panel">
+          <div class="admin-panel-head">
+            <h2 class="admin-panel-title">All registrations</h2>
+            <button type="button" class="btn btn-ghost btn-sm" id="csv-btn">Download CSV</button>
+          </div>
+          <form class="admin-filters" id="filter-form">
+            <label class="field">
+              <span class="field-label">Search</span>
+              <input id="filter-search" type="search" placeholder="Name, ID, phone, email" />
+            </label>
+            <label class="field">
+              <span class="field-label">State</span>
+              <select id="filter-state">
+                <option value="">All states</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field-label">LGA</span>
+              <select id="filter-lga" disabled>
+                <option value="">All LGAs</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field-label">From</span>
+              <input id="filter-from" type="date" />
+            </label>
+            <label class="field">
+              <span class="field-label">To</span>
+              <input id="filter-to" type="date" />
+            </label>
+          </form>
+          <p class="admin-count" id="filter-count"></p>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Name</th>
+                  <th>Membership ID</th>
+                  <th>Phone</th>
+                  <th>State</th>
+                  <th>LGA</th>
+                  <th>Registered</th>
+                </tr>
+              </thead>
+              <tbody id="members-body"></tbody>
+            </table>
+          </div>
+          <div class="admin-pager" id="pager"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="member-drawer" class="admin-drawer" hidden>
+    <div class="admin-drawer-backdrop" data-close-drawer></div>
+    <aside class="admin-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <div class="admin-drawer-head">
+        <h2 class="admin-panel-title" id="drawer-title">Member</h2>
+        <button type="button" class="btn btn-ghost btn-sm" data-close-drawer>Close</button>
+      </div>
+      <div class="admin-drawer-photo-wrap">
+        <img id="drawer-photo" class="admin-drawer-photo" alt="" hidden />
+      </div>
+      <dl class="reg-review" id="drawer-list"></dl>
+      <p class="reg-status" id="drawer-status" role="status"></p>
+      <div class="card-toggle" role="tablist" aria-label="Card side">
+        <button type="button" class="btn btn-ghost is-card-tab is-active" data-admin-card-face="front">Front</button>
+        <button type="button" class="btn btn-ghost is-card-tab" data-admin-card-face="back">Back</button>
+      </div>
+      <div class="id-card-frame">
+        <canvas id="admin-card-front" class="id-card-face is-visible" width="860" height="540" aria-label="Membership card front"></canvas>
+        <canvas id="admin-card-back" class="id-card-face" width="860" height="540" aria-label="Membership card back"></canvas>
+      </div>
+      <p class="reg-actions">
+        <button type="button" class="btn btn-solid" id="download-member-card" disabled>Download ID card</button>
+      </p>
+    </aside>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>window.IBBN_CONFIG = window.IBBN_CONFIG || { supabaseUrl: "", supabaseAnonKey: "" };</script>
+  <script src="config.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="id-card.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
