@@ -15,6 +15,8 @@
   var filtered = [];
   var page = 1;
   var selected = null;
+  var staffRole = "";
+  var staffState = "";
   var cardReady = false;
   var photoUrlCache = {};
   var drawToken = 0;
@@ -42,6 +44,20 @@
   });
 
   document.getElementById("sign-out-btn").addEventListener("click", signOut);
+  document.getElementById("password-btn").addEventListener("click", function () {
+    var form = document.getElementById("password-form");
+    form.hidden = !form.hidden;
+    setPasswordStatus("", false);
+  });
+  document.getElementById("password-cancel").addEventListener("click", function () {
+    document.getElementById("password-form").hidden = true;
+    document.getElementById("password-form").reset();
+    setPasswordStatus("", false);
+  });
+  document.getElementById("password-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    changePassword();
+  });
   document.getElementById("refresh-btn").addEventListener("click", function () {
     loadMembers();
   });
@@ -108,33 +124,82 @@
       members = [];
       filtered = [];
       selected = null;
+      staffRole = "";
+      staffState = "";
+      document.getElementById("password-form").hidden = true;
       showLogin();
     });
   }
 
   function enterApp(user) {
     setLoginStatus("Checking access…", false);
-    supabaseClient
-      .from("admins")
-      .select("user_id, email")
-      .eq("user_id", user.id)
-      .maybeSingle()
-      .then(function (res) {
-        if (res.error || !res.data) {
-          supabaseClient.auth.signOut();
-          showLogin();
-          setLoginStatus(
-            res.error && /admins/i.test(res.error.message)
-              ? "Admin access is not set up yet. Run the latest SQL in Supabase, then add your user to the admins table."
-              : "This account is not authorised to open the admin console.",
-            true
-          );
+    Promise.all([
+      supabaseClient.from("admins").select("user_id, email").eq("user_id", user.id).maybeSingle(),
+      supabaseClient.from("coordinators").select("user_id, email, state").eq("user_id", user.id).maybeSingle(),
+    ])
+      .then(function (results) {
+        var adminRes = results[0];
+        var coordRes = results[1];
+        if (adminRes.error && /admins/i.test(adminRes.error.message)) {
+          denyAccess("Admin access is not set up yet. Run the latest SQL in Supabase, then add your user to the admins table.");
           return;
         }
-        adminUser.textContent = user.email || res.data.email || "Admin";
-        showApp();
-        loadMembers();
+        if (coordRes.error && /coordinators/i.test(coordRes.error.message)) {
+          denyAccess("Coordinator access is not set up yet. Run schema.sql, then create_coordinators.sql in Supabase.");
+          return;
+        }
+        if (adminRes.data) {
+          staffRole = "admin";
+          staffState = "";
+          applyStaffChrome(user.email || adminRes.data.email || "Admin");
+          showApp();
+          loadMembers();
+          return;
+        }
+        if (coordRes.data && coordRes.data.state) {
+          staffRole = "coordinator";
+          staffState = coordRes.data.state;
+          applyStaffChrome(user.email || coordRes.data.email || "Coordinator");
+          showApp();
+          loadMembers();
+          return;
+        }
+        denyAccess("This account is not authorised to open the admin console.");
+      })
+      .catch(function () {
+        denyAccess("Could not check access. Try again.");
       });
+  }
+
+  function denyAccess(message) {
+    supabaseClient.auth.signOut();
+    showLogin();
+    setLoginStatus(message, true);
+  }
+
+  function applyStaffChrome(email) {
+    adminUser.textContent = email;
+    var brand = document.getElementById("admin-brand-sub");
+    var title = document.getElementById("overview-title");
+    var note = document.getElementById("role-note");
+    var totalLabel = document.getElementById("stat-total-label");
+    var registerTitle = document.getElementById("register-title");
+    var byState = document.getElementById("by-state-panel");
+    if (staffRole === "coordinator") {
+      brand.textContent = staffState + " coordinator";
+      title.textContent = staffState + " registrations";
+      note.textContent = "You can only view members registered in " + staffState + ".";
+      totalLabel.textContent = "Members in " + staffState;
+      registerTitle.textContent = staffState + " registrations";
+      byState.hidden = true;
+    } else {
+      brand.textContent = "National admin";
+      title.textContent = "Membership overview";
+      note.textContent = "You can view members in every state.";
+      totalLabel.textContent = "All members";
+      registerTitle.textContent = "All registrations";
+      byState.hidden = false;
+    }
   }
 
   function showLogin() {
@@ -172,10 +237,11 @@
     var pageSize = 1000;
     var all = [];
     function next(from) {
-      return supabaseClient
-        .from("members")
-        .select("*")
-        .order("created_at", { ascending: false })
+      var query = supabaseClient.from("members").select("*").order("created_at", { ascending: false });
+      if (staffRole === "coordinator" && staffState) {
+        query = query.eq("state", staffState);
+      }
+      return query
         .range(from, from + pageSize - 1)
         .then(function (res) {
           if (res.error) throw new Error(res.error.message);
@@ -200,7 +266,10 @@
     var from = document.getElementById("filter-from").value;
     var to = document.getElementById("filter-to").value;
 
+    if (staffRole === "coordinator") state = staffState;
+
     filtered = members.filter(function (m) {
+      if (staffRole === "coordinator" && m.state !== staffState) return false;
       if (state && m.state !== state) return false;
       if (lga && m.lga !== lga) return false;
       if (from && lagosDate(m.created_at) < from) return false;
@@ -228,12 +297,24 @@
   }
 
   function fillStateFilter() {
+    if (staffRole === "coordinator" && staffState) {
+      stateSelect.innerHTML = "";
+      var opt = document.createElement("option");
+      opt.value = staffState;
+      opt.textContent = staffState;
+      stateSelect.appendChild(opt);
+      stateSelect.value = staffState;
+      stateSelect.disabled = true;
+      fillLgaFilter();
+      return;
+    }
     var keep = stateSelect.value;
     var states = uniqueSorted(
       members.map(function (m) {
         return m.state;
       })
     );
+    stateSelect.disabled = false;
     stateSelect.innerHTML = '<option value="">All states</option>';
     states.forEach(function (name) {
       var opt = document.createElement("option");
@@ -653,6 +734,35 @@
     });
   }
 
+  function changePassword() {
+    var a = document.getElementById("new-password").value;
+    var b = document.getElementById("new-password-2").value;
+    if (a.length < 8) {
+      setPasswordStatus("Use at least 8 characters.", true);
+      return;
+    }
+    if (a !== b) {
+      setPasswordStatus("The two passwords do not match.", true);
+      return;
+    }
+    setPasswordStatus("Saving…", false);
+    supabaseClient.auth
+      .updateUser({ password: a })
+      .then(function (res) {
+        if (res.error) {
+          setPasswordStatus(res.error.message || "Could not update password.", true);
+          return;
+        }
+        document.getElementById("password-form").reset();
+        document.getElementById("password-form").hidden = true;
+        setAppStatus("Password updated.", false);
+        setPasswordStatus("", false);
+      })
+      .catch(function () {
+        setPasswordStatus("Could not update password. Try again.", true);
+      });
+  }
+
   function friendlyAuthError(err) {
     var msg = (err && err.message) || "";
     if (/invalid login/i.test(msg)) return "Wrong email or password.";
@@ -668,6 +778,13 @@
   function setAppStatus(msg, isError) {
     appStatus.textContent = msg || "";
     appStatus.classList.toggle("is-error", Boolean(isError && msg));
+  }
+
+  function setPasswordStatus(msg, isError) {
+    var el = document.getElementById("password-status");
+    if (!el) return;
+    el.textContent = msg || "";
+    el.classList.toggle("is-error", Boolean(isError && msg));
   }
 
   function setDrawerStatus(msg, isError) {

@@ -2052,6 +2052,49 @@ img {
   margin-top: 1.25rem;
 }
 
+.admin-app .admin-role-note {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.admin-password-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.admin-password-form[hidden] {
+  display: none !important;
+}
+
+.admin-password-form .field input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-body);
+}
+
+.admin-password-form .reg-status,
+.admin-password-form .reg-actions {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  .admin-password-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

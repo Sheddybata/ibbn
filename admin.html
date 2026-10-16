@@ -22,10 +22,11 @@
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="IBBN home">
         <span class="brand-mark">IBBN</span>
-        <span class="brand-sub">Admin</span>
+        <span class="brand-sub" id="admin-brand-sub">Admin</span>
       </a>
       <div class="admin-header-actions" id="admin-header-actions" hidden>
         <span class="admin-user" id="admin-user"></span>
+        <button type="button" class="btn btn-ghost btn-sm" id="password-btn">Change password</button>
         <button type="button" class="btn btn-ghost btn-sm" id="refresh-btn">Refresh</button>
         <button type="button" class="btn btn-solid btn-sm" id="sign-out-btn">Sign out</button>
       </div>
@@ -35,8 +36,8 @@
   <main id="main">
     <section id="admin-login" class="section section-alt">
       <div class="container narrow">
-        <h1 class="page-title">Admin sign in</h1>
-        <p class="lead">Monitor IBBN registrations. This page is for authorised staff only.</p>
+        <h1 class="page-title">Staff sign in</h1>
+        <p class="lead">National admin and state coordinators can monitor registrations here. Coordinators only see their own state.</p>
         <form id="login-form" class="reg-form admin-login-form" novalidate>
           <label class="field">
             <span class="field-label">Email</span>
@@ -56,13 +57,29 @@
 
     <section id="admin-app" class="section admin-app" hidden>
       <div class="container admin-wide">
-        <h1 class="page-title">Membership overview</h1>
+        <h1 class="page-title" id="overview-title">Membership overview</h1>
+        <p class="admin-role-note" id="role-note"></p>
         <p class="admin-updated" id="admin-updated"></p>
         <p class="reg-status" id="app-status" role="status"></p>
+        <form id="password-form" class="admin-password-form" hidden>
+          <label class="field">
+            <span class="field-label">New password</span>
+            <input id="new-password" type="password" autocomplete="new-password" minlength="8" required />
+          </label>
+          <label class="field">
+            <span class="field-label">Confirm password</span>
+            <input id="new-password-2" type="password" autocomplete="new-password" minlength="8" required />
+          </label>
+          <p class="reg-status" id="password-status" role="status"></p>
+          <div class="reg-actions">
+            <button type="submit" class="btn btn-solid btn-sm">Save password</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="password-cancel">Cancel</button>
+          </div>
+        </form>
 
         <div class="admin-stats" id="admin-stats">
           <article class="admin-stat">
-            <p class="admin-stat-label">All members</p>
+            <p class="admin-stat-label" id="stat-total-label">All members</p>
             <p class="admin-stat-value" id="stat-total">0</p>
           </article>
           <article class="admin-stat">
@@ -84,7 +101,7 @@
             <h2 class="admin-panel-title">Gender</h2>
             <ul class="admin-gender" id="stat-gender"></ul>
           </article>
-          <article class="admin-panel">
+          <article class="admin-panel" id="by-state-panel">
             <h2 class="admin-panel-title">By state</h2>
             <div class="admin-state-list" id="stat-states"></div>
           </article>
@@ -97,7 +114,7 @@
 
         <article class="admin-panel admin-register-panel">
           <div class="admin-panel-head">
-            <h2 class="admin-panel-title">All registrations</h2>
+            <h2 class="admin-panel-title" id="register-title">All registrations</h2>
             <button type="button" class="btn btn-ghost btn-sm" id="csv-btn">Download CSV</button>
           </div>
           <form class="admin-filters" id="filter-form">

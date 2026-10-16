@@ -11,6 +11,8 @@
 -- 5. Admin: Authentication → Settings → turn OFF "Allow new users to sign up".
 --    Authentication → Users → Add user (email + password, auto-confirm).
 --    Then run the insert at the bottom of this file with that email.
+-- 6. State coordinators: after this file succeeds, run create_coordinators.sql
+--    and copy the email/password table it prints. Share those privately.
 
 create extension if not exists "pgcrypto";
 
@@ -139,12 +141,52 @@ grant execute on function public.is_admin() to authenticated;
 grant select on public.admins to authenticated;
 grant select on public.members to authenticated;
 
+create table if not exists public.coordinators (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  email text not null,
+  state text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists coordinators_state_idx on public.coordinators (state);
+
+alter table public.coordinators enable row level security;
+
+drop policy if exists coordinators_self_select on public.coordinators;
+create policy coordinators_self_select
+  on public.coordinators
+  for select
+  to authenticated
+  using (user_id = auth.uid() or public.is_admin());
+
+grant select on public.coordinators to authenticated;
+
+create or replace function public.coordinator_state()
+returns text
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select state from public.coordinators where user_id = auth.uid() limit 1;
+$$;
+
+revoke all on function public.coordinator_state() from public;
+grant execute on function public.coordinator_state() to authenticated;
+
 drop policy if exists members_admin_select on public.members;
-create policy members_admin_select
+drop policy if exists members_staff_select on public.members;
+create policy members_staff_select
   on public.members
   for select
   to authenticated
-  using (public.is_admin());
+  using (
+    public.is_admin()
+    or (
+      public.coordinator_state() is not null
+      and state = public.coordinator_state()
+    )
+  );
 
 -- Same-browser admin sessions use the authenticated role, not anon.
 drop policy if exists members_authenticated_insert on public.members;
